@@ -1,0 +1,31 @@
+
+version: '3'
+
+services:
+  sensors-exporter:
+    image: heironeous/sensors-exporter:latest
+    volumes:
+      - ./sensors-exporter-config.yaml:/sensors-exporter/config.yaml
+    networks:
+      - exporters
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus-data/:/prometheus/
+    networks:
+      - exporters
+      - visualizers
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    networks:
+      - visualizers
+    volumes:
+      -
+networks:
+  exporters:
+  visualizers:
